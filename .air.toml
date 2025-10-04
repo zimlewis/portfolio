@@ -34,6 +34,7 @@ tmp_dir = "tmp"
   runner = "green"
   watcher = "cyan"
 
+*.test
 [log]
   main_only = false
   silent = false
