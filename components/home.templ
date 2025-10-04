@@ -3,8 +3,15 @@ package components
 
 templ Home() {
     @Base() {
-        <h1 class="text-3xl font-bold underline">
+        <div class="bg-sky-700 text-gray-700">
             Hello world
-        </h1>
+            <div x-data="{ open: false }">
+                <button @click="open = !open">Expand</button>
+             
+                <span x-show="open">
+                    Content...
+                </span>
+            </div>
+        </div>
     }
 }
