@@ -7,12 +7,19 @@ import (
 
 
 func InitRoutes(server *gin.Engine) {
-	htmlRenderer := server.HTMLRender
+
+	ginHtmlRenderer := server.HTMLRender
+
 	server.HTMLRender = &gintemplrenderer.HTMLTemplRenderer{
-		FallbackHTMLRenderer: htmlRenderer,
+		FallbackHtmlRenderer: ginHtmlRenderer,
 	}
+	// htmlRenderer := server.HTMLRender
+	// server.HTMLRender = &gintemplrenderer.HTMLTemplRenderer{
+	// 	FallbackHTMLRenderer: htmlRenderer,
+	// }
+	//
+	//
+	// server.SetTrustedProxies(nil)
 
-
-	server.SetTrustedProxies(nil)
-
+	server.GET("/", home)
 }

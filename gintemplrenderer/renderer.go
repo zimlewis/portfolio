@@ -23,7 +23,7 @@ func New(c context.Context, status int, component templ.Component) *Renderer {
 
 
 func (renderer Renderer) WriteContentType(w http.ResponseWriter) {
-	w.Header().Set("Content-Type", "text/html' charset=utf-8")
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 }
 
 func (renderer Renderer) Render(w http.ResponseWriter) error {

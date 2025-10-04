@@ -8,13 +8,13 @@ import (
 )
 
 type HTMLTemplRenderer struct {
-	FallbackHTMLRenderer render.HTMLRender
+	FallbackHtmlRenderer render.HTMLRender
 }
 
 func (r *HTMLTemplRenderer) Instance(s string, d any) render.Render{
 	templData, ok := d.(templ.Component)
 	if !ok {
-		if r.FallbackHTMLRenderer != nil { return r.FallbackHTMLRenderer.Instance(s, d) }
+		if r.FallbackHtmlRenderer != nil { return r.FallbackHtmlRenderer.Instance(s, d) }
 	}
 
 
