@@ -5,10 +5,24 @@ templ Home() {
     @Base() {
         <div class="bg-sky-700 text-gray-700">
             Hello world
-            <div x-data="{ open: false }">
-                <button @click="open = !open">Expand</button>
+            <div x-data="navbar">
+                <button @click="toggleShow">Expand</button>
              
-                <span x-show="open">
+                <span x-cloak x-show="open">
+                    Content...
+                </span>
+            </div>
+            <div x-data="navbar">
+                <button @click="toggleShow">Expand</button>
+             
+                <span x-cloak x-show="open">
+                    Content...
+                </span>
+            </div>
+            <div x-data="navbar">
+                <button @click="toggleShow">Expand</button>
+             
+                <span x-cloak x-show="open">
                     Content...
                 </span>
             </div>
