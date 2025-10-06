@@ -1,0 +1,35 @@
+package views
+
+import (
+	"github.com/zimlewis/portfolio/components/carousel"
+	"github.com/zimlewis/portfolio/components/dialog"
+	"github.com/zimlewis/portfolio/components/popover"
+	"github.com/zimlewis/portfolio/components/dropdown"
+	"github.com/zimlewis/portfolio/components/themedropbox"
+)
+
+templ Base() {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+			<link rel="stylesheet" href="/static/css/output.css"/>
+			<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+			<title>Document</title>
+            @dropdown.Script()
+            @popover.Script()
+			@dialog.Script()
+			@carousel.Script()
+		</head>
+		<body x-data :class="$store.theme.get()">
+            @themedropbox.ThemeDropbox()
+            { children... }
+			<script src="/static/js/index.js"></script>
+		</body>
+	</html>
+}
+
+
+

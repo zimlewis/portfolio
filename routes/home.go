@@ -4,12 +4,12 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/zimlewis/portfolio/components"
+	"github.com/zimlewis/portfolio/views/homeview"
 )
 
 
 func home(c *gin.Context) {
-	c.HTML(http.StatusOK, "", components.Home())
+	c.HTML(http.StatusOK, "", homeview.Home())
 }
 
 

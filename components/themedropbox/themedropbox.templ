@@ -1,0 +1,37 @@
+package themedropbox
+
+import "github.com/zimlewis/portfolio/components/dropdown"
+import "github.com/zimlewis/portfolio/components/button"
+import "github.com/zimlewis/portfolio/components/icon"
+
+templ ThemeDropbox() {
+    @dropdown.Dropdown() {
+        @dropdown.Trigger() {
+            @button.Button(button.Props{
+                Variant: button.VariantGhost,
+            }) {
+                @icon.Palette()
+                Theme
+            }
+        }
+        @dropdown.Content(dropdown.ContentProps{
+            Class: "w-56",
+        }) {
+            @dropdown.Item(dropdown.ItemProps{
+                Attributes: templ.Attributes{
+                    "@click": "$store.theme.set('light')", 
+                },
+            }) {
+                Light
+            }
+
+            @dropdown.Item(dropdown.ItemProps{
+                Attributes: templ.Attributes{
+                    "@click": "$store.theme.set('dark')", 
+                },
+            }) {
+                Dark
+            }
+        }
+    }
+}

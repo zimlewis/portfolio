@@ -3,6 +3,7 @@ module github.com/zimlewis/portfolio
 go 1.25.1
 
 require (
+	github.com/Oudwins/tailwind-merge-go v0.2.1 // indirect
 	github.com/a-h/templ v0.3.943 // indirect
 	github.com/bytedance/sonic v1.14.0 // indirect
 	github.com/bytedance/sonic/loader v0.3.0 // indirect

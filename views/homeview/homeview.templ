@@ -1,0 +1,66 @@
+package homeview
+
+import "github.com/zimlewis/portfolio/components/card"
+import "github.com/zimlewis/portfolio/components/dialog"
+import "github.com/zimlewis/portfolio/components/button"
+import "github.com/zimlewis/portfolio/views"
+
+templ Home() {
+    @dialog.Dialog(dialog.Props{
+        ID: "external-dialog",
+    }) {
+        @dialog.Content(dialog.ContentProps{
+            Class: "max-w-md",
+        }) {
+            @dialog.Header() {
+                @dialog.Title() {
+                    External Dialog
+                }
+                @dialog.Description() {
+                    This dialog can be triggered from anywhere on the page.
+                }
+            }
+            @dialog.Footer() {
+                @dialog.Close() {
+                    @button.Button() {
+                        Close
+                    }
+                }
+            }
+        }
+    }
+    @views.Base() {
+
+
+        <div class="w-full max-w-sm">
+            @card.Card() {
+                <div class="overflow-hidden w-full rounded-t-lg">
+                </div>
+                @card.Header() {
+                    @card.Title() {
+                        Featured Card
+                    }
+                    @card.Description() {
+                        With top image
+                    }
+                }
+                @card.Content() {
+                    <p>This card shows top image usage with lazy loading for better performance.</p>
+                }
+                @card.Footer() {
+                    @dialog.Trigger(dialog.TriggerProps{
+                        For: "external-dialog",
+                    }) {
+                        @button.Button(button.Props{
+                            Variant: button.VariantOutline,
+                        }) {
+                            Open dialog
+                        }
+                    }
+                }
+            }
+        </div>
+    }
+}
+
+
