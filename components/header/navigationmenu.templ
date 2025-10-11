@@ -1,0 +1,96 @@
+package header
+
+import "github.com/zimlewis/portfolio/components/sidebar"
+import "github.com/zimlewis/portfolio/components/icon"
+import "github.com/zimlewis/portfolio/components/collapsible"
+
+templ NavigationMenu() {
+	@sidebar.Content() {
+		@sidebar.Menu() {
+			@singleMenu(singleMenuProps{
+				href: "/",
+				menuProps: menuProps{
+					label: "Home",
+					icon:  icon.House,
+				},
+			})
+			@dropdownMenu(dropdownMenuProps{
+				menuProps: menuProps{
+					label: "Projects",
+					icon:  icon.Book,
+				},
+			})
+		}
+	}
+}
+
+type menuProps struct {
+	label string
+	icon  func(...icon.Props) templ.Component
+}
+
+type singleMenuProps struct {
+	href string
+	menuProps
+}
+
+templ singleMenu(props singleMenuProps) {
+	@sidebar.MenuItem() {
+		@sidebar.MenuButton(sidebar.MenuButtonProps{
+			Attributes: templ.Attributes{
+				"x-target.push": "main",
+			},
+			Href:    props.href,
+			Tooltip: props.label,
+		}) {
+			@props.icon(icon.Props{Class: "size-4"})
+			<span>{ props.label }</span>
+		}
+	}
+}
+
+type dropdownMenuProps struct {
+	menuProps
+}
+
+templ dropdownMenu(props dropdownMenuProps) {
+	@sidebar.MenuItem() {
+		@collapsible.Collapsible(collapsible.Props{
+			Open:  true,
+			Class: "group/collapsible w-full",
+		}) {
+			@collapsible.Trigger() {
+				@sidebar.MenuButton(sidebar.MenuButtonProps{
+					Tooltip: props.label,
+				}) {
+					@props.icon(icon.Props{Class: "size-4"})
+					<span>{ props.label }</span>
+					@icon.ChevronRight(icon.Props{
+						Class: "ml-auto size-4 transition-transform group-data-[tui-collapsible-state=open]/collapsible:rotate-90",
+					})
+				}
+			}
+			@collapsible.Content() {
+				@sidebar.MenuSub() {
+					@dropdownMenuItem()
+					@dropdownMenuItem()
+					@dropdownMenuItem()
+					@dropdownMenuItem()
+				}
+			}
+		}
+	}
+}
+
+templ dropdownMenuItem() {
+	@sidebar.MenuSubItem() {
+		@sidebar.MenuSubButton(sidebar.MenuSubButtonProps{
+			Href: "/projects",
+			Attributes: templ.Attributes{
+				"x-target": "main",
+			},
+		}) {
+			<span>Reports</span>
+		}
+	}
+}

@@ -22,4 +22,5 @@ func InitRoutes(server *gin.Engine) {
 	// server.SetTrustedProxies(nil)
 
 	server.GET("/", home)
+	server.GET("/projects", projects)
 }
