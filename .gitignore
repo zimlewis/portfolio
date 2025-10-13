@@ -1,3 +1,5 @@
 tmp/
 *.test
 tmux.sh
+
+public/static/css/output.css
