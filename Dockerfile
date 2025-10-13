@@ -1,31 +1,37 @@
-# Stage 1: Build the Go application
-FROM golang:1.25-alpine AS builder
-
-# Enable Go modules and create working directory
-RUN apk add --no-cache gcc g++ make libwebp-dev
-ENV CGO_ENABLED=1 GOOS=linux GOARCH=amd64
+# Generate
+FROM ghcr.io/a-h/templ:latest AS generate-stage
+COPY --chown=65532:65532 . /app
 WORKDIR /app
+RUN ["templ", "generate"]
 
-# Download Go modules early to leverage Docker cache
-COPY go.mod go.sum ./
-RUN go mod tidy
-RUN go mod download
-
-# Copy the rest of the source code
+# Generate output.css
+FROM alpine:latest AS generate-static
+RUN apk add --no-cache gcc g++ make libwebp-dev
+WORKDIR /app
 COPY . .
 
-# Build output.css
-RUN chmod +x ./tailwindcss
-RUN ./tailwindcss -i public/static/css/input.css -o public/static/css/output.css
+RUN wget https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-x64-musl 
+RUN chmod +x ./tailwindcss-linux-x64-musl 
+RUN ./tailwindcss-linux-x64-musl -i public/static/css/input.css -o public/static/css/output.css
 
-# Build templ
-RUN chmod +x ./templ
-RUN ./templ generate
 
-# Build the application
+# Build
+FROM golang:1.25-alpine AS build-stage
+
+
+RUN apk add --no-cache gcc g++ make libwebp-dev
+ENV CGO_ENABLED=1 GOOS=linux GOARCH=amd64
+
+WORKDIR /app
+COPY go.mod go.sum .
+RUN go mod download
+
+COPY --from=generate-stage /app .
+
+
 RUN go build -o server .
 
-# Stage 2: Create a minimal runtime image
+# Run 
 FROM alpine:latest
 
 WORKDIR /app
@@ -33,10 +39,10 @@ WORKDIR /app
 RUN apk add --no-cache libwebp
 
 # Copy binary from builder stage
-COPY --from=builder /app/server .
+COPY --from=build-stage /app/server .
 
 # Copy static
-COPY --from=builder /app/public/ ./public/
+COPY --from=generate-static /app/public/ ./public/
 
 COPY entrypoint.sh .
 RUN chmod +x entrypoint.sh
