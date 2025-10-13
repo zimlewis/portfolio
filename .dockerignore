@@ -1,0 +1,6 @@
+tmp/
+.git/
+*.test
+tmux.sh
+
+public/static/css/output.css
