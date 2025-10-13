@@ -1,0 +1,17 @@
+package header
+
+// import "github.com/zimlewis/portfolio/components/icon"
+import "github.com/zimlewis/portfolio/components/themedropbox"
+import "github.com/zimlewis/portfolio/components/sidebar"
+
+templ Header() {
+	<header class="w-full flex h-10 px-5 bg-secondary border-b border-border sticky">
+		<div class="w-full h-full flex justify-baseline items-center">
+        
+            @sidebar.Trigger()
+		</div>
+		<div class="w-full h-full flex justify-end items-center">
+			@themedropbox.ThemeDropbox()
+		</div>
+	</header>
+}
