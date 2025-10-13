@@ -4,56 +4,72 @@ import "github.com/zimlewis/portfolio/components/sidebar"
 import "github.com/zimlewis/portfolio/components/icon"
 import "github.com/zimlewis/portfolio/components/collapsible"
 
-templ NavigationMenu() {
+
+type MenuProps struct {
+	Label string
+	Icon  func(...icon.Props) templ.Component
+}
+
+type SingleMenuProps struct {
+	Href string
+	MenuProps
+}
+
+type DropdownMenuProps struct {
+    Items []DropdownMenuItemProps
+	MenuProps
+}
+
+type DropdownMenuItemProps struct {
+    Label string
+    Href string
+}
+
+type NavigationMenuItem struct {
+    SingleMenu *SingleMenuProps
+    DropdownMenu *DropdownMenuProps
+}
+
+type NavigationMenuProps struct {
+    Items []NavigationMenuItem
+}
+
+templ NavigationMenu(props NavigationMenuProps) {
 	@sidebar.Content() {
 		@sidebar.Menu() {
-			@singleMenu(singleMenuProps{
-				href: "/",
-				menuProps: menuProps{
-					label: "Home",
-					icon:  icon.House,
-				},
-			})
-			@dropdownMenu(dropdownMenuProps{
-				menuProps: menuProps{
-					label: "Projects",
-					icon:  icon.Book,
-				},
-			})
+            for _, item := range props.Items {
+                if item.DropdownMenu != nil {
+                    {{ var menu = *item.DropdownMenu }}
+                    @dropdownMenu(menu)
+                }
+                if item.SingleMenu != nil {
+                    {{ var menu = *item.SingleMenu }}
+                    @singleMenu(menu)
+                }
+            }
 		}
 	}
 }
 
-type menuProps struct {
-	label string
-	icon  func(...icon.Props) templ.Component
-}
 
-type singleMenuProps struct {
-	href string
-	menuProps
-}
-
-templ singleMenu(props singleMenuProps) {
+templ singleMenu(props SingleMenuProps) {
 	@sidebar.MenuItem() {
 		@sidebar.MenuButton(sidebar.MenuButtonProps{
 			Attributes: templ.Attributes{
 				"x-target.push": "main",
 			},
-			Href:    props.href,
-			Tooltip: props.label,
+			Href:    props.Href,
+			Tooltip: props.Label,
 		}) {
-			@props.icon(icon.Props{Class: "size-4"})
-			<span>{ props.label }</span>
+			@props.Icon(icon.Props{Class: "size-4"})
+			<span>{ props.Label }</span>
 		}
 	}
 }
 
-type dropdownMenuProps struct {
-	menuProps
-}
 
-templ dropdownMenu(props dropdownMenuProps) {
+
+templ dropdownMenu(props DropdownMenuProps) {
 	@sidebar.MenuItem() {
 		@collapsible.Collapsible(collapsible.Props{
 			Open:  true,
@@ -61,10 +77,10 @@ templ dropdownMenu(props dropdownMenuProps) {
 		}) {
 			@collapsible.Trigger() {
 				@sidebar.MenuButton(sidebar.MenuButtonProps{
-					Tooltip: props.label,
+					Tooltip: props.Label,
 				}) {
-					@props.icon(icon.Props{Class: "size-4"})
-					<span>{ props.label }</span>
+					@props.Icon(icon.Props{Class: "size-4"})
+					<span>{ props.Label }</span>
 					@icon.ChevronRight(icon.Props{
 						Class: "ml-auto size-4 transition-transform group-data-[tui-collapsible-state=open]/collapsible:rotate-90",
 					})
@@ -72,25 +88,24 @@ templ dropdownMenu(props dropdownMenuProps) {
 			}
 			@collapsible.Content() {
 				@sidebar.MenuSub() {
-					@dropdownMenuItem()
-					@dropdownMenuItem()
-					@dropdownMenuItem()
-					@dropdownMenuItem()
+                    for _, item := range props.Items {
+                        @dropdownMenuItem(item)
+                    }
 				}
 			}
 		}
 	}
 }
 
-templ dropdownMenuItem() {
+templ dropdownMenuItem(props DropdownMenuItemProps) {
 	@sidebar.MenuSubItem() {
 		@sidebar.MenuSubButton(sidebar.MenuSubButtonProps{
-			Href: "/projects",
+			Href: props.Href,
 			Attributes: templ.Attributes{
-				"x-target": "main",
+				"x-target.push": "main",
 			},
 		}) {
-			<span>Reports</span>
+			<span>{ props.Label }</span>
 		}
 	}
 }

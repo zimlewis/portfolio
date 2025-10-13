@@ -14,7 +14,7 @@ import (
 	"github.com/zimlewis/portfolio/components/dialog"
 	"github.com/zimlewis/portfolio/components/dropdown"
 	"github.com/zimlewis/portfolio/components/header"
-	// "github.com/zimlewis/portfolio/components/icon"
+	"github.com/zimlewis/portfolio/components/icon"
 	"github.com/zimlewis/portfolio/components/popover"
 	"github.com/zimlewis/portfolio/components/sidebar"
 )
@@ -96,14 +96,56 @@ func Base() templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = header.NavigationMenu().Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = header.NavigationMenu(header.NavigationMenuProps{
+					Items: []header.NavigationMenuItem{
+
+						header.NavigationMenuItem{
+							SingleMenu: &header.SingleMenuProps{
+								Href: "/",
+								MenuProps: header.MenuProps{
+									Label: "Home",
+									Icon:  icon.House,
+								},
+							},
+						},
+
+						header.NavigationMenuItem{
+							DropdownMenu: &header.DropdownMenuProps{
+								MenuProps: header.MenuProps{
+									Label: "Projects",
+									Icon:  icon.Book,
+								},
+								Items: []header.DropdownMenuItemProps{
+									header.DropdownMenuItemProps{
+										Label: "Your mom",
+										Href:  "/projects",
+									},
+									header.DropdownMenuItemProps{
+										Label: "Me may",
+										Href:  "/projects",
+									},
+								},
+							},
+						},
+
+						header.NavigationMenuItem{
+							SingleMenu: &header.SingleMenuProps{
+								Href: "/man",
+								MenuProps: header.MenuProps{
+									Label: "Man",
+									Icon:  icon.PersonStanding,
+								},
+							},
+						},
+					},
+				}).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				return nil
 			})
 			templ_7745c5c3_Err = sidebar.Sidebar(sidebar.Props{
-				Collapsed:   true,
+				Collapsed:   false,
 				Collapsible: sidebar.CollapsibleOffcanvas,
 				Variant:     sidebar.VariantInset,
 			}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var3), templ_7745c5c3_Buffer)
@@ -130,7 +172,7 @@ func Base() templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, " <main id=\"main\" class=\"overflow-auto h-full\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, " <main id=\"main\" class=\"overflow-auto h-full my-auto\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

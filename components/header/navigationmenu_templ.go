@@ -12,7 +12,36 @@ import "github.com/zimlewis/portfolio/components/sidebar"
 import "github.com/zimlewis/portfolio/components/icon"
 import "github.com/zimlewis/portfolio/components/collapsible"
 
-func NavigationMenu() templ.Component {
+type MenuProps struct {
+	Label string
+	Icon  func(...icon.Props) templ.Component
+}
+
+type SingleMenuProps struct {
+	Href string
+	MenuProps
+}
+
+type DropdownMenuProps struct {
+	Items []DropdownMenuItemProps
+	MenuProps
+}
+
+type DropdownMenuItemProps struct {
+	Label string
+	Href  string
+}
+
+type NavigationMenuItem struct {
+	SingleMenu   *SingleMenuProps
+	DropdownMenu *DropdownMenuProps
+}
+
+type NavigationMenuProps struct {
+	Items []NavigationMenuItem
+}
+
+func NavigationMenu(props NavigationMenuProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -57,28 +86,25 @@ func NavigationMenu() templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = singleMenu(singleMenuProps{
-					href: "/",
-					menuProps: menuProps{
-						label: "Home",
-						icon:  icon.House,
-					},
-				}).Render(ctx, templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, " ")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = dropdownMenu(dropdownMenuProps{
-					menuProps: menuProps{
-						label: "Projects",
-						icon:  icon.Book,
-					},
-				}).Render(ctx, templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
+				for _, item := range props.Items {
+					if item.DropdownMenu != nil {
+						var menu = *item.DropdownMenu
+						templ_7745c5c3_Err = dropdownMenu(menu).Render(ctx, templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, " ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					if item.SingleMenu != nil {
+						var menu = *item.SingleMenu
+						templ_7745c5c3_Err = singleMenu(menu).Render(ctx, templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+					}
 				}
 				return nil
 			})
@@ -96,17 +122,7 @@ func NavigationMenu() templ.Component {
 	})
 }
 
-type menuProps struct {
-	label string
-	icon  func(...icon.Props) templ.Component
-}
-
-type singleMenuProps struct {
-	href string
-	menuProps
-}
-
-func singleMenu(props singleMenuProps) templ.Component {
+func singleMenu(props SingleMenuProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -151,7 +167,7 @@ func singleMenu(props singleMenuProps) templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = props.icon(icon.Props{Class: "size-4"}).Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = props.Icon(icon.Props{Class: "size-4"}).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -160,9 +176,9 @@ func singleMenu(props singleMenuProps) templ.Component {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var7 string
-				templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(props.label)
+				templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(props.Label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/header/navigationmenu.templ`, Line: 47, Col: 22}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/header/navigationmenu.templ`, Line: 65, Col: 22}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 				if templ_7745c5c3_Err != nil {
@@ -178,8 +194,8 @@ func singleMenu(props singleMenuProps) templ.Component {
 				Attributes: templ.Attributes{
 					"x-target.push": "main",
 				},
-				Href:    props.href,
-				Tooltip: props.label,
+				Href:    props.Href,
+				Tooltip: props.Label,
 			}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var6), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -194,11 +210,7 @@ func singleMenu(props singleMenuProps) templ.Component {
 	})
 }
 
-type dropdownMenuProps struct {
-	menuProps
-}
-
-func dropdownMenu(props dropdownMenuProps) templ.Component {
+func dropdownMenu(props DropdownMenuProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -267,7 +279,7 @@ func dropdownMenu(props dropdownMenuProps) templ.Component {
 							}()
 						}
 						ctx = templ.InitializeContext(ctx)
-						templ_7745c5c3_Err = props.icon(icon.Props{Class: "size-4"}).Render(ctx, templ_7745c5c3_Buffer)
+						templ_7745c5c3_Err = props.Icon(icon.Props{Class: "size-4"}).Render(ctx, templ_7745c5c3_Buffer)
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
@@ -276,9 +288,9 @@ func dropdownMenu(props dropdownMenuProps) templ.Component {
 							return templ_7745c5c3_Err
 						}
 						var templ_7745c5c3_Var13 string
-						templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(props.label)
+						templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(props.Label)
 						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/header/navigationmenu.templ`, Line: 67, Col: 24}
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/header/navigationmenu.templ`, Line: 83, Col: 24}
 						}
 						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 						if templ_7745c5c3_Err != nil {
@@ -297,7 +309,7 @@ func dropdownMenu(props dropdownMenuProps) templ.Component {
 						return nil
 					})
 					templ_7745c5c3_Err = sidebar.MenuButton(sidebar.MenuButtonProps{
-						Tooltip: props.label,
+						Tooltip: props.Label,
 					}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var12), templ_7745c5c3_Buffer)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
@@ -336,33 +348,11 @@ func dropdownMenu(props dropdownMenuProps) templ.Component {
 							}()
 						}
 						ctx = templ.InitializeContext(ctx)
-						templ_7745c5c3_Err = dropdownMenuItem().Render(ctx, templ_7745c5c3_Buffer)
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, " ")
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						templ_7745c5c3_Err = dropdownMenuItem().Render(ctx, templ_7745c5c3_Buffer)
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, " ")
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						templ_7745c5c3_Err = dropdownMenuItem().Render(ctx, templ_7745c5c3_Buffer)
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, " ")
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						templ_7745c5c3_Err = dropdownMenuItem().Render(ctx, templ_7745c5c3_Buffer)
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
+						for _, item := range props.Items {
+							templ_7745c5c3_Err = dropdownMenuItem(item).Render(ctx, templ_7745c5c3_Buffer)
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
 						}
 						return nil
 					})
@@ -395,7 +385,7 @@ func dropdownMenu(props dropdownMenuProps) templ.Component {
 	})
 }
 
-func dropdownMenuItem() templ.Component {
+func dropdownMenuItem(props DropdownMenuItemProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -440,16 +430,29 @@ func dropdownMenuItem() templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<span>Reports</span>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<span>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var19 string
+				templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(props.Label)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/header/navigationmenu.templ`, Line: 108, Col: 22}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</span>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				return nil
 			})
 			templ_7745c5c3_Err = sidebar.MenuSubButton(sidebar.MenuSubButtonProps{
-				Href: "/projects",
+				Href: props.Href,
 				Attributes: templ.Attributes{
-					"x-target": "main",
+					"x-target.push": "main",
 				},
 			}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var18), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {

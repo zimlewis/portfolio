@@ -6,9 +6,9 @@ import (
 	"github.com/zimlewis/portfolio/components/dialog"
 	"github.com/zimlewis/portfolio/components/dropdown"
 	"github.com/zimlewis/portfolio/components/header"
-	// "github.com/zimlewis/portfolio/components/icon"
 	"github.com/zimlewis/portfolio/components/popover"
 	"github.com/zimlewis/portfolio/components/sidebar"
+	"github.com/zimlewis/portfolio/components/icon"
 )
 
 templ Base() {
@@ -32,17 +32,59 @@ templ Base() {
 		<body x-data :class="$store.theme.get()">
 			@sidebar.Layout() {
 				@sidebar.Sidebar(sidebar.Props{
-					Collapsed:   true,
+					Collapsed:   false,
 					Collapsible: sidebar.CollapsibleOffcanvas,
 					Variant:     sidebar.VariantInset,
 				}) {
-                    @header.NavigationMenu()
+                    @header.NavigationMenu(header.NavigationMenuProps{
+                        Items: []header.NavigationMenuItem{
+
+                            header.NavigationMenuItem{
+                                SingleMenu: &header.SingleMenuProps{
+                                    Href: "/",
+                                    MenuProps: header.MenuProps{
+                                        Label: "Home",
+                                        Icon: icon.House,
+                                    },
+                                },
+                            },
+                            
+                            header.NavigationMenuItem{
+                                DropdownMenu: &header.DropdownMenuProps{
+                                    MenuProps: header.MenuProps{
+                                        Label: "Projects",
+                                        Icon: icon.Book,
+                                    },
+                                    Items: []header.DropdownMenuItemProps{
+                                        header.DropdownMenuItemProps{
+                                            Label: "Your mom",
+                                            Href: "/projects",
+                                        },
+                                        header.DropdownMenuItemProps{
+                                            Label: "Me may",
+                                            Href: "/projects",
+                                        },
+                                    },
+                                },
+                            },
+
+                            header.NavigationMenuItem{
+                                SingleMenu: &header.SingleMenuProps{
+                                    Href: "/man",
+                                    MenuProps: header.MenuProps{
+                                        Label: "Man",
+                                        Icon: icon.PersonStanding,
+                                    },
+                                },
+                            },
+                        },
+                    })
 				}
 				@sidebar.Inset(sidebar.InsetProps{
 					Class: "h-[96vh] my-auto overflow-hidden",
 				}) {
 					@header.Header()
-					<main id="main" class="overflow-auto h-full">
+					<main id="main" class="overflow-auto h-full my-auto">
 						{ children... }
 					</main>
 				}
