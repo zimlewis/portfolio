@@ -6,6 +6,8 @@ export default defineConfig({
         // where Vite outputs your JS/CSS
         outDir: "public/assets",
 
+        copyPublicDir: false, 
+
         // don’t put inside nested /assets folder
         assetsDir: "",
 
