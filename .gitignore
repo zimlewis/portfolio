@@ -2,4 +2,7 @@ tmp/
 *.test
 tmux.sh
 
-public/static/css/output.css
+public/assets/main.css
+public/assets/main.js
+
+node_modules/
