@@ -9,6 +9,8 @@ import (
 	"github.com/zimlewis/portfolio/components/popover"
 	"github.com/zimlewis/portfolio/components/sidebar"
 	"github.com/zimlewis/portfolio/components/icon"
+	"fmt"
+	"time"
 )
 
 templ Base() {
@@ -18,9 +20,8 @@ templ Base() {
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-			<link rel="stylesheet" href="/static/css/output.css"/>
-			<script defer src="https://cdn.jsdelivr.net/npm/@imacrayon/alpine-ajax@0.12.4/dist/cdn.min.js"></script>
-			<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+            <link rel="stylesheet" href={ fmt.Sprintf("/static/assets/main.css?v=%d", time.Now().Unix()) } />
+            <script type="module" src={ fmt.Sprintf("/static/assets/main.js?v=%d", time.Now().Unix()) }></script>
 			<title>Document</title>
 			@sidebar.Script()
 			@dropdown.Script()
@@ -29,7 +30,7 @@ templ Base() {
 			@carousel.Script()
 			@collapsible.Script()
 		</head>
-		<body x-data :class="$store.theme.get()">
+		<body x-data :class="$store.theme.get()"> // This only get the initialize values
 			@sidebar.Layout() {
 				@sidebar.Sidebar(sidebar.Props{
 					Collapsed:   false,
@@ -89,7 +90,6 @@ templ Base() {
 					</main>
 				}
 			}
-			<script src="/static/js/index.js"></script>
 		</body>
 	</html>
 }

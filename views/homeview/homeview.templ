@@ -6,31 +6,30 @@ import "github.com/zimlewis/portfolio/components/button"
 import "github.com/zimlewis/portfolio/views"
 
 templ Home() {
-    @dialog.Dialog(dialog.Props{
-        ID: "external-dialog",
-    }) {
-        @dialog.Content(dialog.ContentProps{
-            Class: "max-w-md",
+    @views.Base() {
+        @dialog.Dialog(dialog.Props{
+            ID: "external-dialog",
         }) {
-            @dialog.Header() {
-                @dialog.Title() {
-                    External Dialog
+            @dialog.Content(dialog.ContentProps{
+                Class: "max-w-md",
+            }) {
+                @dialog.Header() {
+                    @dialog.Title() {
+                        External Dialog
+                    }
+                    @dialog.Description() {
+                        This dialog can be triggered from anywhere on the page.
+                    }
                 }
-                @dialog.Description() {
-                    This dialog can be triggered from anywhere on the page.
-                }
-            }
-            @dialog.Footer() {
-                @dialog.Close() {
-                    @button.Button() {
-                        Close
+                @dialog.Footer() {
+                    @dialog.Close() {
+                        @button.Button() {
+                            Close
+                        }
                     }
                 }
             }
         }
-    }
-    @views.Base() {
-
 
         <div class="w-full max-w-sm">
             @card.Card() {
