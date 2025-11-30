@@ -11,9 +11,14 @@ import templruntime "github.com/a-h/templ/runtime"
 import "github.com/zimlewis/portfolio/components/card"
 import "github.com/zimlewis/portfolio/components/dialog"
 import "github.com/zimlewis/portfolio/components/button"
-import "github.com/zimlewis/portfolio/views"
+import "github.com/zimlewis/portfolio/views/base"
+import "github.com/zimlewis/portfolio/utils"
 
-func Home() templ.Component {
+type Props struct {
+	Cookies utils.Cookies
+}
+
+func Home(props ...Props) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -34,6 +39,10 @@ func Home() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
+		var p Props
+		if len(props) >= 0 {
+			p = props[0]
+		}
 		templ_7745c5c3_Var2 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 			templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 			templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
@@ -2160,7 +2169,9 @@ func Home() templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = views.Base().Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = base.Base(base.Props{
+			Cookies: p.Cookies,
+		}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

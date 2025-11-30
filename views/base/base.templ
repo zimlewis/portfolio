@@ -1,4 +1,4 @@
-package views
+package base
 
 import (
 	"github.com/zimlewis/portfolio/components/carousel"
@@ -11,9 +11,20 @@ import (
 	"github.com/zimlewis/portfolio/components/icon"
 	"fmt"
 	"time"
+	"github.com/zimlewis/portfolio/utils"
 )
 
-templ Base() {
+type Props struct {
+    Cookies utils.Cookies
+}
+
+templ Base(props ...Props) {
+    {{
+        var p Props
+        if len(props) >= 0 {
+            p = props[0]
+        }
+    }}
 	<!DOCTYPE html>
 	<html lang="en">
 		<head>
@@ -33,7 +44,7 @@ templ Base() {
 		<body x-data :class="[$store.theme.getPalette(), $store.theme.getMode()]"> // This only get the initialize values
 			@sidebar.Layout() {
 				@sidebar.Sidebar(sidebar.Props{
-					Collapsed:   false,
+					Collapsed:   p.Cookies["sidebar_state"] == "false",
 					Collapsible: sidebar.CollapsibleOffcanvas,
 					Variant:     sidebar.VariantInset,
 				}) {

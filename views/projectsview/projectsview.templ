@@ -1,10 +1,22 @@
 package projectsview
 
-import "github.com/zimlewis/portfolio/views"
+import "github.com/zimlewis/portfolio/views/base"
+import "github.com/zimlewis/portfolio/utils"
 
+type Props struct {
+    Cookies utils.Cookies
+}
 
-templ ProjectViews() {
-    @views.Base() {
+templ ProjectViews(props ...Props) {
+    {{
+        var p Props 
+        if len(props) >= 0 {
+            p = props[0]
+        }
+    }}
+    @base.Base(base.Props {
+        Cookies: p.Cookies,
+    }) {
         Your mom
     }
 }
