@@ -4,6 +4,25 @@ package popover
 import (
 	"github.com/zimlewis/portfolio/utils"
 	"strconv"
+	"context"
+
+
+)
+
+
+
+
+
+type contextKey string
+
+
+
+
+
+var (
+
+
+	contentIDKey    contextKey = "contentID"
 )
 
 type Placement string
@@ -30,6 +49,12 @@ const (
 	TriggerTypeClick TriggerType = "click"
 )
 
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
 type TriggerProps struct {
 	ID          string
 	Class       string
@@ -53,6 +78,24 @@ type ContentProps struct {
 	Exclusive        bool
 }
 
+templ Popover(props ...Props) {
+	{{
+		var p Props
+		if len(props) > 0 {
+			p = props[0]
+		}
+		contentID := p.ID
+
+		if contentID == "" {
+			contentID = utils.RandomID()
+		}
+
+        ctx = context.WithValue(ctx, contentIDKey, contentID)
+	}}
+
+    { children... }
+}
+
 templ Trigger(props ...TriggerProps) {
 	{{ var p TriggerProps }}
 	if len(props) > 0 {
@@ -61,14 +104,19 @@ templ Trigger(props ...TriggerProps) {
 	if p.TriggerType == "" {
 		{{ p.TriggerType = TriggerTypeClick }}
 	}
+    {{ var contentID string }}
+    {{ ctxId, ok := ctx.Value(contentIDKey).(string) }}
+    if p.For != "" {
+        {{ contentID = p.For }}
+    } else if ok {
+        {{ contentID = ctxId }}
+    }
 	<span
 		if p.ID != "" {
 			id={ p.ID }
 		}
 		class={ utils.TwMerge("group cursor-pointer", p.Class) }
-		if p.For != "" {
-			data-tui-popover-trigger={ p.For }
-		}
+        data-tui-popover-trigger={ contentID }
 		data-tui-popover-open="false"
 		data-tui-popover-type={ string(p.TriggerType) }
 		{ p.Attributes... }
@@ -92,9 +140,16 @@ templ Content(props ...ContentProps) {
 			{{ p.Offset = 4 }}
 		}
 	}
+    {{ var contentID string }}
+    {{ ctxId, ok := ctx.Value(contentIDKey).(string) }}
+    if p.ID != "" {
+        {{ contentID = p.ID }}
+    } else if ok {
+        {{ contentID = ctxId }}
+    }
 	<div
-		id={ p.ID }
-		data-tui-popover-id={ p.ID }
+		id={ contentID }
+		data-tui-popover-id={ contentID }
 		data-tui-popover-open="false"
 		data-tui-popover-placement={ string(p.Placement) }
 		data-tui-popover-offset={ strconv.Itoa(p.Offset) }

@@ -30,7 +30,7 @@ templ Base() {
 			@carousel.Script()
 			@collapsible.Script()
 		</head>
-		<body x-data :class="$store.theme.get()"> // This only get the initialize values
+		<body x-data :class="[$store.theme.getPalette(), $store.theme.getMode()]"> // This only get the initialize values
 			@sidebar.Layout() {
 				@sidebar.Sidebar(sidebar.Props{
 					Collapsed:   false,
