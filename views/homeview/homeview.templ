@@ -3,10 +3,23 @@ package homeview
 import "github.com/zimlewis/portfolio/components/card"
 import "github.com/zimlewis/portfolio/components/dialog"
 import "github.com/zimlewis/portfolio/components/button"
-import "github.com/zimlewis/portfolio/views"
+import "github.com/zimlewis/portfolio/views/base"
+import "github.com/zimlewis/portfolio/utils"
 
-templ Home() {
-    @views.Base() {
+type Props struct {
+    Cookies utils.Cookies
+}
+
+templ Home(props ...Props) {
+    {{
+        var p Props
+        if len(props) >= 0 {
+            p = props[0]
+        }
+    }}
+    @base.Base(base.Props{   
+        Cookies: p.Cookies,
+    }) {
         @dialog.Dialog(dialog.Props{
             ID: "external-dialog",
         }) {
