@@ -1,19 +1,32 @@
 import type { AlpineComponent } from "alpinejs"
 
+type ThemePalette = "blue" | "green" | "orange" | "purple" | "red" | "rose" | "default" | "yellow"
+type ThemeMode = "light" | "dark"
+
 interface ThemeSelector {
-    theme: string
-    set: (theme: string) => void
-    get: () => string
+    palette: ThemePalette
+    mode: ThemeMode 
+    setPalette: (palette: ThemePalette) => void
+    setMode: (mode: ThemeMode) => void
+    getPalette: () => ThemePalette
+    getMode: () => ThemeMode 
 }
 
 
 var selector : AlpineComponent<ThemeSelector> = {
-    theme: "dark",
-    set(t: string) {
-        this.theme = t
+    palette: "default",
+    mode: "dark",
+    setPalette(palette: ThemePalette) {
+        this.palette = palette;
     },
-    get() {
-        return this.theme
+    setMode(mode: ThemeMode) {
+        this.mode = mode;
+    },
+    getPalette() {
+        return this.palette;
+    },
+    getMode() {
+        return this.mode;
     }
 }
 

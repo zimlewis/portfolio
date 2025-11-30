@@ -8,7 +8,7 @@
 @import "./themes/purple.css";
 @import "./themes/red.css";
 @import "./themes/rose.css";
-@import "./themes/white.css";
+@import "./themes/default.css";
 @import "./themes/yellow.css";
 
 @theme inline {

@@ -1,37 +1,72 @@
 package themedropbox
 
-import "github.com/zimlewis/portfolio/components/dropdown"
-import "github.com/zimlewis/portfolio/components/button"
-import "github.com/zimlewis/portfolio/components/icon"
+import (
+	"fmt"
+	"github.com/zimlewis/portfolio/components/button"
+	"github.com/zimlewis/portfolio/components/icon"
+	"github.com/zimlewis/portfolio/components/popover"
+	"github.com/zimlewis/portfolio/components/separator"
+)
 
 templ ThemeDropbox() {
-    @dropdown.Dropdown() {
-        @dropdown.Trigger() {
-            @button.Button(button.Props{
-                Variant: button.VariantGhost,
-            }) {
-                @icon.Palette()
-            }
-        }
-        @dropdown.Content(dropdown.ContentProps{
-            Placement: dropdown.PlacementBottom,
-            Class: "w-56",
-        }) {
-            @dropdown.Item(dropdown.ItemProps{
-                Attributes: templ.Attributes{
-                    "@click": "$store.theme.set('light')", 
-                },
-            }) {
-                Light
-            }
+	{{
 
-            @dropdown.Item(dropdown.ItemProps{
-                Attributes: templ.Attributes{
-                    "@click": "$store.theme.set('dark')", 
-                },
-            }) {
-                Dark
-            }
-        }
-    }
+
+	themes := map[string]string{
+		"default": "#303446",
+		"yellow":  "#f0b100",
+		"red":     "#fb2c36",
+		"rose":    "#ff2056",
+		"blue":    "#2b7fff",
+		"green":   "#00c950",
+		"orange":  "#ff6900",
+		"purple":  "#8e51ff",
+	}
+
+	themesOrder := []string{
+		"default",
+		"yellow",
+		"red",
+		"rose",
+		"blue",
+		"green",
+		"orange",
+		"purple",
+	}
+	}}
+	@popover.Popover() {
+		@popover.Trigger() {
+			@button.Button(button.Props{
+				Variant: button.VariantGhost,
+			}) {
+				@icon.Palette()
+			}
+		}
+		@popover.Content(popover.ContentProps{
+			Placement: popover.PlacementBottom,
+			Class:     "w-max h-max",
+		}) {
+			<div class="grid grid-cols-4 w-full h-max gap-3 p-5">
+				for _, theme := range themesOrder {
+					<div
+						style={ fmt.Sprintf("background-color: %s", themes[theme]) }
+						class="aspect-square rounded-full w-5 cursor-pointer"
+						@click={ fmt.Sprintf("$store.theme.setPalette('%s')", theme) }
+					></div>
+				}
+			</div>
+			@separator.Separator()
+            <div class="w-auto mx-5">
+                @button.Button(button.Props{
+                    Class: "w-full my-3",
+                    Variant: button.VariantOutline,
+                    Attributes: templ.Attributes {
+                        "@click": "$store.theme.setMode($store.theme.getMode()=='light'?'dark':'light')",
+                    },
+                }) {
+                    @icon.Eclipse()
+                }
+            </div>
+		}
+	}
 }
